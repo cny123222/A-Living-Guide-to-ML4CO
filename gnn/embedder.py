@@ -7,7 +7,7 @@ class Embedder(nn.Module):
         self.edge_embed = nn.Linear(1, hidden_dim, bias=True)
         
     def forward(self, x: Tensor, e: Tensor):
-        r"""
+        """
         Args:
             x: (V, 2) nodes_feature (node coords)
             e: (E,) edges_feature (distance matrix)
