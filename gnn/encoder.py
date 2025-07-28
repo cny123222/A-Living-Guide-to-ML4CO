@@ -2,6 +2,7 @@ from torch import Tensor, nn
 from .embedder import Embedder
 from .gnn_layer import GNNLayer
 from .out_layer import OutLayer
+import torch.nn.functional as F
 
 class GCNEncoder(nn.Module):
     def __init__(
@@ -27,4 +28,5 @@ class GCNEncoder(nn.Module):
         """
         x, e = self.embed(x, e)
         x, e = self.gcn(x, e, edge_index) 
-        return self.out(e)
+        e = self.out(e)
+        return F.sigmoid(e)  # shape: (E, )

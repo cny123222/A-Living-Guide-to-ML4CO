@@ -40,8 +40,15 @@ class TSPDataset(Dataset):
         # calculate each edge's length
         edges = np.linalg.norm(points[src] - points[dst], axis=1)  # shape: (E, )
         edges = torch.tensor(edges, dtype=torch.float32)  # shape: (E, )
+        
+        # generate the ground truth
+        gt_adj = np.zeros((node_num, node_num), dtype=bool)
+        gt_adj[tour[:-1], tour[1:]] = True
+        gt_adj = gt_adj | gt_adj.T  # make it undirected
+        ground_truth = gt_adj[src, dst]
+        ground_truth = torch.tensor(ground_truth, dtype=torch.long)  # shape: (E, )
 
-        return points, edges, edge_index, tour
+        return points, edges, edge_index, ground_truth, tour[:-1] # return tour without the last node
     
     
 class GNNEnv(BaseEnv):
@@ -62,6 +69,7 @@ class GNNEnv(BaseEnv):
             mode=mode,
             train_batch_size=train_batch_size,
             val_batch_size=val_batch_size,
+            test_batch_size=test_batch_size,
             train_path=train_path,
             val_path=val_path,
             test_path=test_path,
@@ -69,7 +77,7 @@ class GNNEnv(BaseEnv):
             device=device
         )
         if mode is not None:
-            self.load_data 
+            self.load_data()
         
     def load_data(self):
         self.train_dataset = TSPDataset(self.train_path) if self.train_path else None
