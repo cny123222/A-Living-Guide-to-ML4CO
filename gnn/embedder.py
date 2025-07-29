@@ -10,11 +10,12 @@ class Embedder(nn.Module):
         """
         Args:
             x: (V, 2) nodes_feature (node coords)
-            e: (E,) edges_feature (distance matrix)
+            e: (E, ) edges_feature (distance matrix)
         Return:
             x: (V, H)
             e: (E, H)
         """  
+        e = e.unsqueeze(-1)  # shape: (E, 1)
         x = self.node_embed(x) 
         e = self.edge_embed(e)
         return x, e

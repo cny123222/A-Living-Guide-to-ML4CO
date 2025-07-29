@@ -10,14 +10,14 @@ class OutLayer(nn.Module):
         super(OutLayer, self).__init__()
         mlp_layers = []
         if layer_num == 1:
-            mlp_layers.append(nn.Linear(hidden_dim, 1))
+            mlp_layers.append(nn.Linear(hidden_dim, 2))
         else:
             mlp_layers.append(nn.Linear(hidden_dim, hidden_dim))
             mlp_layers.append(nn.ReLU())
             for _ in range(layer_num - 2):
                 mlp_layers.append(nn.Linear(hidden_dim, hidden_dim))
                 mlp_layers.append(nn.ReLU())
-            mlp_layers.append(nn.Linear(hidden_dim, 1))
+            mlp_layers.append(nn.Linear(hidden_dim, 2))
         self.mlp = nn.Sequential(*mlp_layers)
 
     def forward(self, e_final: Tensor):
@@ -25,8 +25,7 @@ class OutLayer(nn.Module):
         Args:
             e_final: (E, H) Final edge features
         Returns:
-            prob: (E,) probablity of each edge being connected to the TSP tour
+            prob: (E, 2) Probability of each edge being connected and not connected to the TSP tour.
         """
-        prob = self.mlp(e_final)  # shape: (E, 1)
-        prob = prob.squeeze(-1)  # shape: (E, )
+        prob = self.mlp(e_final)  # shape: (E, 2)
         return prob

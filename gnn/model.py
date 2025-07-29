@@ -1,3 +1,4 @@
+import torch
 from torch import nn, Tensor
 from ml4co_kit import BaseModel, TSPSolver
 from .env import GNNEnv
@@ -32,22 +33,24 @@ class GNNModel(BaseModel):
         """
         self.env.mode = phase
         # unpack batch data
-        x, e, edge_index, ref_tour, ground_truth = batch
+        x, e, edge_index, ground_truth, ref_tour = batch
         # x: (B, V, H), e: (B, E, H)
-        # edge_index: (B, 2, E), ref_tour: (B, V)
-        # ground_truth: (B, E)
-        e_pred = self.model(x, e, edge_index)  # shape: (B, E)
-        loss = nn.CrossEntropyLoss()(e_pred, ground_truth)
+        # edge_index: (B, 2, E), ground_truth: (B, E)
+        # ref_tour: (B, V)
+        e_pred = self.model(x, e, edge_index)  # shape:(B, E, 2)
+        loss = nn.CrossEntropyLoss()(e_pred.view(-1, 2), ground_truth.view(-1))
         if phase == "val":
-            tours = self.decoder.decode(e_pred, x, edge_index)
+            e_prob = torch.softmax(e_pred, dim=-1) # shape:(B, E, 2)
+            heatmap = e_prob[:, :, 1]  # shape: (B, E)
+            tours = self.decoder.decode(heatmap, x.shape[1], edge_index)  # shape: (B, V)
             costs_avg, _, gap_avg, _ = self.evaluate(x, tours, ref_tour)
         # log
         metrics = {f"{phase}/loss": loss}
+        print(f"{phase} loss: {loss.item()}")
         if phase == "val":
             metrics.update({"val/costs_avg": costs_avg, "val/gap_avg": gap_avg})
         for k, v in metrics.items():
-            formatted_v = f"{v:.8f}"
-            self.log(k, float(formatted_v), prog_bar=True, on_epoch=True, sync_dist=True)
+            self.log(k, float(v), prog_bar=True, on_epoch=True, sync_dist=True)
         # return
         return loss if phase == "train" else metrics   
             
@@ -66,6 +69,9 @@ class GNNModel(BaseModel):
             gap_avg: Average gap between predicted and reference tours.
             gap_std: Standard deviation of the gap.
         """
+        x = x.cpu().numpy()
+        ref_tour = ref_tour.cpu().numpy()
+            
         solver = TSPSolver()
         solver.from_data(points=x, tours=tours, ref=False)
         solver.from_data(tours=ref_tour, ref=True)

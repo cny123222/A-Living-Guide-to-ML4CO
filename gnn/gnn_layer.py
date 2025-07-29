@@ -16,8 +16,10 @@ class GNNLayer(nn.Module):
         self.W5 = nn.Linear(hidden_dim, hidden_dim, bias=False)
         
         # BatchNorm for node and edge
-        self.bn_x = nn.BatchNorm1d(hidden_dim)
-        self.bn_e = nn.BatchNorm1d(hidden_dim)
+        # self.bn_x = nn.BatchNorm1d(hidden_dim)
+        # self.bn_e = nn.BatchNorm1d(hidden_dim)
+        self.bn_x = nn.LayerNorm(hidden_dim)
+        self.bn_e = nn.LayerNorm(hidden_dim)
         
     def forward(self, x: Tensor, e: Tensor, edge_index: Tensor):
         """
@@ -28,7 +30,7 @@ class GNNLayer(nn.Module):
             Updated x and e after one layer of GNN.
         """
         # Deconstruct edge_index
-        src, dest = edge_index  # shape: (E, )
+        src, dest = edge_index[0], edge_index[1]
         
         # --- Node Update ---
         w2_x_src = self.W2(x[src])  # shape: (E, H)

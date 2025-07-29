@@ -35,20 +35,27 @@ class TSPDataset(Dataset):
         mask = (src != dst)
         src, dst = src[mask], dst[mask]  # shape: (E, )
         edge_index = np.stack([src, dst], axis=0)  # shape: (2, E)
-        edge_index = torch.tensor(edge_index, dtype=torch.long)  # shape: (2, E)
 
         # calculate each edge's length
         edges = np.linalg.norm(points[src] - points[dst], axis=1)  # shape: (E, )
-        edges = torch.tensor(edges, dtype=torch.float32)  # shape: (E, )
-        
+                
         # generate the ground truth
         gt_adj = np.zeros((node_num, node_num), dtype=bool)
         gt_adj[tour[:-1], tour[1:]] = True
         gt_adj = gt_adj | gt_adj.T  # make it undirected
         ground_truth = gt_adj[src, dst]
-        ground_truth = torch.tensor(ground_truth, dtype=torch.long)  # shape: (E, )
-
+        
+        # convert into tensors
+        points = torch.tensor(points, dtype=torch.float32)  # shape: (V, 2)
+        edges = torch.tensor(edges, dtype=torch.float32)  # shape: (E,)
+        edge_index = torch.tensor(edge_index, dtype=torch.long)  # shape: (2, E)
+        tour = torch.tensor(tour, dtype=torch.long)  # shape: (V+1,)
+        ground_truth = torch.tensor(ground_truth, dtype=torch.long) # shape: (E,)
+        
         return points, edges, edge_index, ground_truth, tour[:-1] # return tour without the last node
+    
+    def __len__(self):
+        return self.points.shape[0]  # number of samples
     
     
 class GNNEnv(BaseEnv):
@@ -57,10 +64,8 @@ class GNNEnv(BaseEnv):
         mode: str = "train",
         train_batch_size: int = 4,
         val_batch_size: int = 4,
-        test_batch_size: int = 4,
         train_path: str = None,
         val_path: str = None,
-        test_path: str = None,
         num_workers: int = 4,
         device: str = "cpu",
     ):
@@ -69,10 +74,8 @@ class GNNEnv(BaseEnv):
             mode=mode,
             train_batch_size=train_batch_size,
             val_batch_size=val_batch_size,
-            test_batch_size=test_batch_size,
             train_path=train_path,
             val_path=val_path,
-            test_path=test_path,
             num_workers=num_workers,
             device=device
         )
