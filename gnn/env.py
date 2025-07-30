@@ -52,7 +52,7 @@ class TSPDataset(Dataset):
         tour = torch.tensor(tour, dtype=torch.long)  # shape: (V+1,)
         ground_truth = torch.tensor(ground_truth, dtype=torch.long) # shape: (E,)
         
-        return points, edges, edge_index, ground_truth, tour[:-1] # return tour without the last node
+        return points, edges, edge_index, ground_truth, tour
     
     def __len__(self):
         return self.points.shape[0]  # number of samples

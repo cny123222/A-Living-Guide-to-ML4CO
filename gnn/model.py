@@ -36,13 +36,13 @@ class GNNModel(BaseModel):
         x, e, edge_index, ground_truth, ref_tour = batch
         # x: (B, V, H), e: (B, E, H)
         # edge_index: (B, 2, E), ground_truth: (B, E)
-        # ref_tour: (B, V)
+        # ref_tour: (B, V+1)
         e_pred = self.model(x, e, edge_index)  # shape: (B, E, 2)
         loss = nn.CrossEntropyLoss()(e_pred.view(-1, 2), ground_truth.view(-1))
         if phase == "val":
             e_prob = torch.softmax(e_pred, dim=-1) # shape: (B, E, 2)
             heatmap = e_prob[:, :, 1]  # shape: (B, E)
-            tours = self.decoder.decode(heatmap, x.shape[1], edge_index)  # shape: (B, V)
+            tours = self.decoder.decode(heatmap, x.shape[1], edge_index)  # shape: (B, V+1)
             costs_avg, _, gap_avg, _ = self.evaluate(x, tours, ref_tour)
         # log
         metrics = {f"{phase}/loss": loss}

@@ -56,5 +56,6 @@ class GNNDecoder():
                 tour.append(next_node)
                 heatmap[idx][:, next_node] = 0  # Remove the selected node
                 current = next_node
+            tour.append(0)  # Return to the starting node
             tours.append(np.array(tour))
         return np.array(tours)
