@@ -10,7 +10,7 @@ class Embedder(nn.Module):
         """
         Args:
             x: (V, 2) nodes_feature (node coords)
-            e: (E, ) edges_feature (distance matrix)
+            e: (E,) edges_feature (distance matrix)
         Return:
             x: (V, H)
             e: (E, H)

@@ -23,7 +23,6 @@ if __name__ == "__main__":
         decoder=GNNDecoder(
             decoding_type="greedy",
         ),
-        learning_rate=1e-4,
     )
     
     trainer = Trainer(model=model, devices=[0], max_epochs=20)

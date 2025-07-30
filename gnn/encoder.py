@@ -35,8 +35,7 @@ class GCNEncoder(nn.Module):
             x_i, e_i = self.embed(x_i, e_i)
             for gcn_layer in self.gcn_layers:
                 x_i, e_i = gcn_layer(x_i, e_i, edge_index[idx])
-            e_i = self.out(e_i)
-            e_i = F.sigmoid(e_i)
+            e_i = self.out(e_i)  # shape: (E, 2)
             e_out.append(e_i)
         e_out = torch.stack(e_out, dim=0)  # shape: (B, E, 2)
         return e_out

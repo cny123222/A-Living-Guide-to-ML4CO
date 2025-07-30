@@ -27,17 +27,17 @@ class TSPDataset(Dataset):
         
     def __getitem__(self, index):
         points = self.points[index]  # shape: (V, 2)
-        tour = self.tours[index]     # shape: (V+1, )
+        tour = self.tours[index]     # shape: (V+1,)
 
         node_num = points.shape[0]
         # create edge index
         src, dst = np.meshgrid(np.arange(node_num), np.arange(node_num))
         mask = (src != dst)
-        src, dst = src[mask], dst[mask]  # shape: (E, )
+        src, dst = src[mask], dst[mask]  # shape: (E,)
         edge_index = np.stack([src, dst], axis=0)  # shape: (2, E)
 
         # calculate each edge's length
-        edges = np.linalg.norm(points[src] - points[dst], axis=1)  # shape: (E, )
+        edges = np.linalg.norm(points[src] - points[dst], axis=1)  # shape: (E,)
                 
         # generate the ground truth
         gt_adj = np.zeros((node_num, node_num), dtype=bool)
