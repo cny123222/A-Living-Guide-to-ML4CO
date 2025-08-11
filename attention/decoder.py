@@ -39,11 +39,8 @@ class MultiHeadMaskedCrossAttention(nn.Module):
                                            Shape: (batch_size, num_nodes).
 
         Returns:
-            A tuple containing:
-            - output (torch.Tensor): The attention-weighted output vector.
-                                     Shape: (batch_size, 1, embed_dim).
-            - attn_weights (torch.Tensor): The attention weights.
-                                           Shape: (batch_size, num_heads, 1, num_nodes).
+            output (torch.Tensor): The attention-weighted output vector.
+                                    Shape: (batch_size, 1, embed_dim).
         """
         batch_size = context_query.shape[0]
         num_nodes = encoder_outputs.shape[1]
@@ -78,7 +75,7 @@ class MultiHeadMaskedCrossAttention(nn.Module):
         context = context.view(batch_size, 1, self.embed_dim)  # Shape: (batch_size, 1, embed_dim)
         output = self.fc_out(context)  # Shape: (batch_size, 1, embed_dim)
 
-        return output, attn_weights
+        return output
     
     
 class Decoder(nn.Module):
@@ -130,7 +127,7 @@ class Decoder(nn.Module):
         """
         batch_size = encoder_outputs.shape[0]
 
-        # 1. Construct the Context Embedding for the entire batch
+        # Step 1: Construct the Context Embedding for the entire batch
         graph_embedding = encoder_outputs.mean(dim=1, keepdim=True)  # Shape: (batch_size, 1, embed_dim)
 
         if partial_tour.size(1) == 0: # If this is the first step (t=1) for all instances
@@ -152,14 +149,14 @@ class Decoder(nn.Module):
         # Project the context to create the initial query
         context_query = self.context_projection(raw_context)  # Shape: (batch_size, 1, embed_dim)
 
-        # 2. Perform the Multi-Head "Glimpse"
-        glimpse_output, _ = self.glimpse_attention(
+        # Step 2: Perform the Multi-Head "Glimpse"
+        glimpse_output = self.glimpse_attention(
             context_query=context_query,
             encoder_outputs=encoder_outputs,
             mask=mask
         )  # Shape: (batch_size, 1, embed_dim)
 
-        # 3. Calculate Final Log-Probabilities
+        # Step 3: Calculate Final Log-Probabilities
         final_q = self.final_q_projection(glimpse_output)  # Shape: (batch_size, 1, embed_dim)
         final_k = self.final_k_projection(encoder_outputs)  # Shape: (batch_size, num_nodes, embed_dim)
         
