@@ -9,7 +9,7 @@ tsp_data_concorde = TSPDataGenerator(
     train_samples_num=1280,
     val_samples_num=128,
     test_samples_num=128,
-    save_path="gnn/data"
+    save_path="data/tsp20"
 )
 
 # generate

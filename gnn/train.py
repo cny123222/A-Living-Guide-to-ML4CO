@@ -11,8 +11,8 @@ if __name__ == "__main__":
             mode="train",
             train_batch_size=32,
             val_batch_size=4,
-            train_path="gnn/data/tsp20_gaussian_train.txt",
-            val_path="gnn/data/tsp20_gaussian_val.txt",
+            train_path="data/tsp20/tsp20_gaussian_train.txt",
+            val_path="data/tsp20/tsp20_gaussian_val.txt",
             device="cuda",
         ),
         encoder=GCNEncoder(
