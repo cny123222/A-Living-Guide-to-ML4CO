@@ -19,7 +19,7 @@ class MultiHeadAttention(nn.Module):
         # Create the final fully connected output layer
         self.fc_out = nn.Linear(embed_dim, embed_dim)
         
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x: Tensor):
         """
         Forward pass for the Multi-Head Attention layer.
         Args:
@@ -56,6 +56,6 @@ class MultiHeadAttention(nn.Module):
         context = context.view(batch_size, -1, self.embed_dim)  # Shape: (batch_size, num_nodes, embed_dim)
         
         # 5. Pass the concatenated context vector through the final linear layer
-        output = self.fc_out(context)
+        output = self.fc_out(context)  # Shape: (batch_size, num_nodes, embed_dim)
 
         return output
