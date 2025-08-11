@@ -1,5 +1,5 @@
 from torch import Tensor, nn
-from attention.mha_layer import MultiHeadSelfAttention
+from attention.attn_layer import MultiHeadSelfAttention
 from attention.ff_layer import FeedForward
 
 
