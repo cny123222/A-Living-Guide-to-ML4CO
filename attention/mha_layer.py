@@ -4,9 +4,9 @@ from torch import Tensor, nn
 import torch.nn.functional as F
 
 
-class MultiHeadAttention(nn.Module):
+class MultiHeadSelfAttention(nn.Module):
     def __init__(self, embed_dim: int, num_heads: int):
-        super(MultiHeadAttention, self).__init__()
+        super(MultiHeadSelfAttention, self).__init__()
         self.embed_dim = embed_dim
         self.num_heads = num_heads
         self.head_dim = embed_dim // num_heads
@@ -21,7 +21,7 @@ class MultiHeadAttention(nn.Module):
         
     def forward(self, x: Tensor):
         """
-        Forward pass for the Multi-Head Attention layer.
+        Forward pass for the Multi-Head Self-Attention layer.
         Args:
             x (torch.Tensor): Input tensor of shape (batch_size, num_nodes, embed_dim).
         Returns:

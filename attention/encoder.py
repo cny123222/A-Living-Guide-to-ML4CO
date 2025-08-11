@@ -1,5 +1,5 @@
 from torch import Tensor, nn
-from attention.mha_layer import MultiHeadAttention
+from attention.mha_layer import MultiHeadSelfAttention
 from attention.ff_layer import FeedForward
 
 
@@ -13,14 +13,12 @@ class AttentionLayer(nn.Module):
         super(AttentionLayer, self).__init__()
         
         # Sublayer 1: Multi-Head Attention
-        self.mha = MultiHeadAttention(embed_dim, num_heads)
+        self.mha = MultiHeadSelfAttention(embed_dim, num_heads)
         
         # Sublayer 2: Feed-Forward Network
         self.ff = FeedForward(embed_dim, hidden_dim)
         
         # Batch Normalization layers
-        # nn.BatchNorm1d expects input of (batch, channels, sequence_len).
-        # Our input is (batch, sequence_len, channels), so we will need to permute.
         self.bn1 = nn.BatchNorm1d(embed_dim)
         self.bn2 = nn.BatchNorm1d(embed_dim)
 
@@ -34,8 +32,6 @@ class AttentionLayer(nn.Module):
             torch.Tensor: Output tensor of the same shape.
         """
         # --- Multi-Head Attention Sublayer ---
-        # Formula (2): h_hat = BN(h^(l-1) + MHA(h^(l-1)))
-        
         # 1. Apply MHA
         mha_output = self.mha(x)
         
@@ -47,8 +43,6 @@ class AttentionLayer(nn.Module):
         sublayer1_output = self.bn1(sublayer1_input.permute(0, 2, 1)).permute(0, 2, 1)
 
         # --- Feed-Forward Sublayer ---
-        # Formula (3): h^(l) = BN(h_hat + FF(h_hat))
-        
         # 1. Apply Feed-Forward network
         ff_output = self.ff(sublayer1_output)
         
@@ -59,7 +53,7 @@ class AttentionLayer(nn.Module):
         # Permute for BN and then permute back
         output = self.bn2(sublayer2_input.permute(0, 2, 1)).permute(0, 2, 1)
 
-        return output
+        return output  # Shape: (batch_size, num_nodes, embed_dim)
 
 
 class Encoder(nn.Module):
