@@ -62,7 +62,7 @@ class AttentionEnv(BaseEnv):
         device: str = "cpu",
     ):
         super(AttentionEnv, self).__init__(
-            name="GNNEnv",
+            name="AttentionEnv",
             mode=mode,
             train_batch_size=train_batch_size,
             val_batch_size=val_batch_size,
@@ -74,7 +74,6 @@ class AttentionEnv(BaseEnv):
         if mode is not None:
             self.load_data()
         self.num_nodes = self.train_dataset.points.shape[1] if self.train_dataset else None
-            
         self.points = None
         self.batch_size = None
         # These will be managed during reset and step
