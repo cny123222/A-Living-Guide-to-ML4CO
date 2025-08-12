@@ -28,6 +28,10 @@ class TSPDataset(Dataset):
         self.points = np.array(points_list)
         self.tours = np.array(tour_list)
         
+        # Convert to tensors
+        self.points = torch.tensor(self.points, dtype=torch.float32)  # Shape: (num_samples, num_nodes, 2)
+        self.tours = torch.tensor(self.tours, dtype=torch.long)  # Shape: (num_samples, num_nodes + 1)
+
     def __getitem__(self, index):
         return self.points[index], self.tours[index]  # Shape: (V, 2) and (V+1,)
     
@@ -69,11 +73,11 @@ class AttentionEnv(BaseEnv):
         )
         if mode is not None:
             self.load_data()
-        self.batch_size = train_batch_size if mode == "train" else val_batch_size
         self.num_nodes = self.train_dataset.points.shape[1] if self.train_dataset else None
             
-        # These will be managed during reset and step
         self.points = None
+        self.batch_size = None
+        # These will be managed during reset and step
         self.current_node = None
         self.tours = None
         self.mask = None
@@ -104,6 +108,7 @@ class AttentionEnv(BaseEnv):
         Resets the environment for a new rollout.
         """
         self.points = points.to(self.device)  # Shape: (batch_size, num_nodes, 2)
+        self.batch_size = self.points.size(0)
         self.current_node = None
         self.tours = torch.zeros((self.batch_size, 0), dtype=torch.long, device=self.device)
         self.mask = torch.ones((self.batch_size, self.num_nodes), device=self.device)
@@ -124,7 +129,7 @@ class AttentionEnv(BaseEnv):
         """
         self.current_node = selected_node
         self.tours = torch.cat([self.tours, self.current_node.unsqueeze(-1)], dim=1)
-        self.mask.scatter_(dim=1, index=self.current_node.unsqueeze(-1), src=0)  # Mark the selected node as visited
+        self.mask.scatter_(dim=1, index=self.current_node.unsqueeze(-1), value=0)  # Mark the selected node as visited
         
         done = (self.tours.size(1) == self.num_nodes)
         reward = -self.evaluate() if done else None  # Negative tour length as reward

@@ -1,3 +1,5 @@
+import copy
+import numpy as np
 import torch
 from torch import Tensor
 from ml4co_kit import BaseModel, TSPSolver
@@ -31,14 +33,19 @@ class AttentionModel(BaseModel):
         )
         self.to(self.env.device)
         
-        # A separate baseline model for REINFORCE baseline
+        # Create a separate baseline model
+        baseline_encoder = copy.deepcopy(encoder)
+        baseline_decoder = copy.deepcopy(decoder)
         self.baseline_model = AttentionPolicy(
             env=env,
-            encoder=encoder,
-            decoder=decoder,
-        )
+            encoder=baseline_encoder,
+            decoder=baseline_decoder,
+        ).to(self.env.device)
         self.baseline_model.eval()  # Set to evaluation mode permanently
         self.update_baseline()  # Initialize baseline with policy weights
+        
+        # Store validation metrics
+        self.val_metrics = []
         
     def update_baseline(self):
         """Copies the weights from the policy model to the baseline model."""
@@ -56,49 +63,52 @@ class AttentionModel(BaseModel):
         if phase == "train":
             # --- 1. Policy Rollout (stochastic) ---
             # Gradients are tracked for this rollout.
-            self.policy_model.train() # Ensure model is in training mode
-            reward, sum_log_probs, _ = self.policy_model(points, mode='sampling')
+            self.model.train() # Ensure model is in training mode
+            reward, sum_log_probs, tours = self.model(points, mode='sampling')
             policy_cost = -reward  # Reward is negative tour length
-            
-            # --- 2. Baseline Rollout (greedy) ---
-            # No gradients are needed for the baseline.
-            with torch.no_grad():
-                reward, _, _ = self.baseline_model(points, mode='greedy')
-                baseline_cost = -reward
-                
-            # --- 3. Calculate REINFORCE Loss ---
-            # The advantage is the gap between the sampled solution and the greedy baseline.
-            advantage = policy_cost - baseline_cost
-            # The loss is the mean of advantage-weighted negative log-probabilities.
-            loss = (advantage * sum_log_probs).mean()
         elif phase == "val":
             with torch.no_grad():
-                self.policy_model.eval() # Set model to evaluation mode
-                
+                self.model.eval() # Set model to evaluation mode
                 # Evaluate the policy model
-                _, _, tours = self.policy_model(points, mode='greedy')
-                costs_avg, _, gap_avg, _ = self.evaluate(points, tours, ref_tours)
+                reward, sum_log_probs, tours = self.model(points, mode='greedy')
+                policy_cost = -reward
+            
+        # --- 2. Baseline Rollout (greedy) ---
+        # No gradients are needed for the baseline.
+        with torch.no_grad():
+            reward, _, baseline_tours = self.baseline_model(points, mode='greedy')
+            baseline_cost = -reward  # Reward is negative tour length
                 
-                _, _, baseline_tours = self.baseline_model(points, mode='greedy')
-                baseline_costs_avg, _, _, _ = self.evaluate(points, baseline_tours, ref_tours)
+        # --- 3. Calculate REINFORCE Loss ---
+        # The advantage is the gap between the sampled solution and the greedy baseline.
+        advantage = policy_cost - baseline_cost
+        # The loss is the mean of advantage-weighted negative log-probabilities.
+        loss = (advantage * sum_log_probs).mean()
+
+        if phase == "val":
+            # Evaluate the tours
+            costs_avg, _, gap_avg, _ = self.evaluate(points, tours, ref_tours)
+            baseline_costs_avg, _, _, _ = self.evaluate(points, baseline_tours, ref_tours)
 
         # --- 4. Logging ---
         metrics = {f"{phase}/loss": loss}
-        # print(f"{phase} loss: {loss.item()}")
+        # print(f"loss: {loss.item()}")
         if phase == "val":
             metrics.update({"val/costs_avg": costs_avg, "val/gap_avg": gap_avg, "val/baseline_costs_avg": baseline_costs_avg})
+            self.val_metrics.append(metrics)
         for k, v in metrics.items():
             self.log(k, float(v), prog_bar=True, on_epoch=True, sync_dist=True)
         # return
         return loss if phase == "train" else metrics   
     
-    def on_validation_epoch_end(self, outputs):
+    def on_validation_epoch_end(self):
         # Aggregate the costs from all validation batches
-        avg_policy_cost = torch.cat([x['val/costs_avg'] for x in outputs]).mean()
-        avg_baseline_cost = torch.cat([x['val/baseline_costs_avg'] for x in outputs]).mean()
+        avg_policy_cost = np.array([x['val/costs_avg'] for x in self.val_metrics]).mean()
+        avg_baseline_cost = np.array([x['val/baseline_costs_avg'] for x in self.val_metrics]).mean()
         # Baseline Update
         if avg_policy_cost < avg_baseline_cost:
             self.update_baseline()
+        self.val_metrics.clear()  # Clear the metrics for the next epoch
 
     def evaluate(self, x: Tensor, tours: Tensor, ref_tours: Tensor):
         """
@@ -117,7 +127,7 @@ class AttentionModel(BaseModel):
         """
         x = x.cpu().numpy()
         tours = tours.cpu().numpy()
-        ref_tour = ref_tour.cpu().numpy()
+        ref_tours = ref_tours.cpu().numpy()
             
         solver = TSPSolver()
         solver.from_data(points=x, tours=tours, ref=False)

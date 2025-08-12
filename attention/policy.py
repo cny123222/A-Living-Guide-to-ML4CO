@@ -52,16 +52,15 @@ class AttentionPolicy(nn.Module):
         encoder_outputs = self.encoder(points)  # Shape: (batch_size, num_nodes, embed_dim)
         
         # Initialize environment for this rollout
-        state, reward, done = self.env.reset()
+        state, reward, done = self.env.reset(points)
         
         # Perform the rollout
         sum_log_probs = torch.zeros(batch_size, device=self.env.device)
         while not done:
             log_probs = self.decoder(encoder_outputs, state.tours, state.mask)  # Shape: (batch_size, num_nodes)
-
+            dist = Categorical(logits=log_probs)  # Create a categorical distribution from log probabilities
             if mode == "sampling":
                 # Sample from the distribution
-                dist = Categorical(logits=log_probs)
                 selected_node = dist.sample()  # Shape: (batch_size,)
             elif mode == "greedy":
                 selected_node = log_probs.argmax(dim=1)
