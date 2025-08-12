@@ -78,7 +78,7 @@ class MultiHeadMaskedCrossAttention(nn.Module):
         return output
     
     
-class Decoder(nn.Module):
+class AttentionDecoder(nn.Module):
     """
     Implements the Decoder for the Attention Model.
 
@@ -88,7 +88,7 @@ class Decoder(nn.Module):
     2. A single-head mechanism with clipping to calculate the final output probabilities.
     """
     def __init__(self, embed_dim: int, num_heads: int, clip_value: float = 10.0):
-        super(Decoder, self).__init__()
+        super(AttentionDecoder, self).__init__()
 
         self.embed_dim = embed_dim
         self.num_heads = num_heads

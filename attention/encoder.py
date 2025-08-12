@@ -56,9 +56,9 @@ class AttentionLayer(nn.Module):
         return output  # Shape: (batch_size, num_nodes, embed_dim)
 
 
-class Encoder(nn.Module):
+class AttentionEncoder(nn.Module):
     def __init__(self, embed_dim: int, num_heads: int, hidden_dim: int, num_layers: int):
-        super(Encoder, self).__init__()
+        super(AttentionEncoder, self).__init__()
         # Embedding layer
         self.embed = nn.Linear(2, embed_dim)
         
