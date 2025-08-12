@@ -2,9 +2,9 @@ from dataclasses import dataclass
 import torch
 from torch import Tensor, nn
 from torch.distributions import Categorical
-from attention.env import AttentionEnv
-from attention.encoder import AttentionEncoder
-from attention.decoder import AttentionDecoder
+from .env import AttentionEnv
+from .encoder import AttentionEncoder
+from .decoder import AttentionDecoder
 
 
 @dataclass

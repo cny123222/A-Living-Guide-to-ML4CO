@@ -1,10 +1,10 @@
 import torch
 from torch import Tensor
 from ml4co_kit import BaseModel, TSPSolver
-from attention.env import AttentionEnv
-from attention.encoder import AttentionEncoder
-from attention.decoder import AttentionDecoder
-from attention.policy import AttentionPolicy
+from .env import AttentionEnv
+from .encoder import AttentionEncoder
+from .decoder import AttentionDecoder
+from .policy import AttentionPolicy
     
     
 class AttentionModel(BaseModel):

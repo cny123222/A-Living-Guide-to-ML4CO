@@ -1,6 +1,6 @@
 from torch import Tensor, nn
-from attention.attn_layer import MultiHeadSelfAttention
-from attention.ff_layer import FeedForward
+from .attn_layer import MultiHeadSelfAttention
+from .ff_layer import FeedForward
 
 
 class AttentionLayer(nn.Module):
