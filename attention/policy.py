@@ -44,6 +44,7 @@ class AttentionPolicy(nn.Module):
             A tuple containing:
             - reward (torch.Tensor): Reward for each instance in the batch. Shape: (batch_size,).
             - sum_log_probs (torch.Tensor): Sum of action log probabilities. Shape: (batch_size,).
+            - tour (torch.Tensor): The decoded tour for each instance. Shape: (batch_size, num_nodes + 1).
         """
         batch_size = points.size(0)
         
@@ -70,4 +71,8 @@ class AttentionPolicy(nn.Module):
             sum_log_probs += dist.log_prob(selected_node)
             state, reward, done = self.env.step(selected_node)
             
-        return reward, sum_log_probs
+        tour = state.tours  # Shape: (batch_size, num_nodes)
+        start_node = tour[:, 0].unsqueeze(1)  # Shape: (batch_size, 1)
+        tour = torch.cat([tour, start_node], dim=1)  # Append the start node to the end of the tour
+            
+        return reward, sum_log_probs, tour

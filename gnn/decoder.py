@@ -13,7 +13,7 @@ class GNNDecoder():
             nodes_num: int, number of nodes
             edge_index: (B, 2, E) Tensor with edges representing connections from source to target nodes
         Returns:
-            tour: (B, V) tensor representing the tour
+            tour: (B, V+1) tensor representing the tour
         """
         # Convert to numpy for processing
         heatmap = heatmap.cpu().numpy()

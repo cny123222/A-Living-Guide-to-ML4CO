@@ -60,8 +60,8 @@ class GNNModel(BaseModel):
         
         Args:
             x: (B, V, H) tensor representing node features.
-            tours: (B, V) tensor representing predicted tours.
-            ref_tour: (B, V) tensor representing reference tours.
+            tours: (B, V+1) tensor representing predicted tours.
+            ref_tour: (B, V+1) tensor representing reference tours.
         
         Returns:
             costs_avg: Average cost of the predicted tours.
