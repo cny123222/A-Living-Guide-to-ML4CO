@@ -107,6 +107,8 @@ class AttentionEnv(BaseEnv):
         self.current_node = None
         self.tours = torch.zeros((self.batch_size, 0), dtype=torch.long, device=self.device)
         self.mask = torch.ones((self.batch_size, self.num_nodes), device=self.device)
+        state_step = StepState(current_node=self.current_node, tours=self.tours, mask=self.mask)
+        return state_step, None, None  # Initial state, no reward, not done
 
     def step(self, selected_node: Tensor):
         """

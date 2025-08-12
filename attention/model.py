@@ -1,21 +1,8 @@
 import torch
-from dataclasses import dataclass
-from torch import Tensor
 from ml4co_kit import BaseModel
 from attention.env import AttentionEnv
 from attention.encoder import AttentionEncoder
 from attention.decoder import AttentionDecoder
-
-
-@dataclass
-class StepState:
-    """
-    A data class to hold the state of the environment at each decoding step.
-    This makes passing state information to the model cleaner.
-    """
-    current_node: Tensor = None  # Shape: (batch,)
-    tours: Tensor = None  # Shape: (batch, time_step)
-    mask: Tensor = None  # Shape: (batch, num_nodes)
     
     
 class AttentionModel(BaseModel):

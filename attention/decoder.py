@@ -169,7 +169,5 @@ class AttentionDecoder(nn.Module):
         # Apply the mask again to ensure forbidden nodes are not chosen
         logits[mask == 0] = -torch.inf
         
-        # Compute log-probabilities
-        log_probs = F.log_softmax(logits, dim=-1)  # Shape: (batch_size, num_nodes)
-
-        return log_probs
+        # Return the log-probabilities
+        return logits  # Shape: (batch_size, num_nodes)
