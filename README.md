@@ -62,8 +62,8 @@ Sharing some useful or interesting related topics encountered in research and pr
 ---
 
 ## 🤝 How to Contribute & Get in Touch
-- If you find any errors or have suggestions, please feel free to create an [**Issue**](https://github.com/your-username/your-repo-name/issues)!
-- If you want to fix an issue or add content directly, you are very welcome to submit a [**Pull Request**](https://github.com/your-username/your-repo-name/pulls).
+- If you find any errors or have suggestions, please feel free to create an [**Issue**](https://github.com/cny123222/A-Living-Guide-to-ML4CO/issues)!
+- If you want to fix an issue or add content directly, you are very welcome to submit a [**Pull Request**](https://github.com/your-username/A-Living-Guide-to-ML4CO/pulls).
 - You can also contact me via email: _cny123222 AT sjtu.edu.cn_
 
 ## 🙏 Acknowledgements
