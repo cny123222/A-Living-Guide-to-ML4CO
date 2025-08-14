@@ -219,7 +219,7 @@ class AttentionEnv(BaseEnv):
 
 {% note info %}
 
-这里代码还是涉及到一些 Tensor 的操作，可以参考另一篇博客 [Fancy but useful Tensor operations](https://cny123222.github.io/2025/07/30/Fancy-but-useful-Tensor-operations/)。
+这里代码还是涉及到一些 Tensor 的操作，可以参考另一篇博客 [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/07/30/Fancy-but-Useful-Tensor-Operations/)。
 
 {% endnote %}
 

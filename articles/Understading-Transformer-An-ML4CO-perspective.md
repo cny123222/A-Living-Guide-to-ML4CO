@@ -144,7 +144,7 @@ class MultiHeadSelfAttention(nn.Module):
         return output
 ```
 
-这段代码中涉及到一些 Tensor 变换操作，如 `.transpose()`、`.view()`，不熟悉的可以参考我的另一篇博客 [Fancy but useful Tensor operations](https://cny123222.github.io/2025/07/30/Fancy-but-useful-Tensor-operations/)。
+这段代码中涉及到一些 Tensor 变换操作，如 `.transpose()`、`.view()`，不熟悉的可以参考我的另一篇博客 [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/07/30/Fancy-but-Useful-Tensor-Operations/)。
 
 {% note info %}
 
