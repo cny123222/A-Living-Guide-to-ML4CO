@@ -56,7 +56,7 @@ Beyond theory and high-level implementation, we will also delve into official co
 ### 5. Related Topics
 Sharing some useful or interesting related topics encountered in research and practice.
 
-- **5.1. [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/07/30/Fancy-but-useful-Tensor-operations/)**
+- **5.1. [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/07/30/Fancy-but-Useful-Tensor-Operations/)**
 - **5.2. (Feel free to suggest topics you're interested in via Issues!)**
 
 ---
