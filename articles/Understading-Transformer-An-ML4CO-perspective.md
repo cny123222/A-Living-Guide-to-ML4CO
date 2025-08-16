@@ -144,7 +144,7 @@ class MultiHeadSelfAttention(nn.Module):
         return output
 ```
 
-这段代码中涉及到一些 Tensor 变换操作，如 `.transpose()`、`.view()`，不熟悉的可以参考我的另一篇博客 [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/07/30/Fancy-but-Useful-Tensor-Operations/)。
+这段代码中涉及到一些 Tensor 变换操作，如 `.transpose()`、`.view()`，不熟悉的可以参考我的另一篇博客 [Pytorch Tensors: A Beginner's Guide](https://cny123222.github.io/2025/08/16/Pytorch-Tensors-A-Beginner-s-Guide/)。
 
 {% note info %}
 

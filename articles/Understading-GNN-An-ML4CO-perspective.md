@@ -156,7 +156,7 @@ class GNNLayer(nn.Module):
 
 {% note info %}
 
-这里涉及到一些 **Tensor 操作**。如果你不熟悉，可以翻看我的另一篇博客 [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/07/30/Fancy-but-Useful-Tensor-Operations/)，里面介绍了包括高级索引在内的 Tensor 进阶操作。
+这里涉及到一些 **Tensor 操作**。如果你不熟悉，可以翻看我的博客 [Pytorch Tensors: A Beginner's Guide](https://cny123222.github.io/2025/08/16/Pytorch-Tensors-A-Beginner-s-Guide/)，里面介绍了包括高级索引在内的 Tensor 核心操作。
 
 {% endnote %}
 
