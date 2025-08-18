@@ -37,7 +37,7 @@ The core idea of this approach is to **learn the structure of the solution**. It
 #### 2.2. Paradigm 2: Autoregressive Transformer + Reinforcement Learning
 The core idea of this approach is to **learn a policy for constructing the solution**. It uses a **Transformer** as a policy network to construct a solution step-by-step, and uses **Reinforcement Learning (REINFORCE)** to learn and improve based on the final quality of the solution.
 
-- **[Understanding Transformers - An ML4CO Perspective](https://cny123222.github.io/2025/07/26/Understading-Transformer-An-ML4CO-perspective/)**
+- **[Understanding Transformers - An ML4CO Perspective](https://cny123222.github.io/2025/08/01/Understading-Transformer-An-ML4CO-perspective/)**
 - **[Paradigm 2: Autoregressive Transformer + RL Code Implementation](https://cny123222.github.io/2025/08/01/Paradigm-2-Autoregressive-Transformer-RL/)**
 
 
