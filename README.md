@@ -46,7 +46,9 @@ We will dive deep into and analyze milestone papers in the field of ML4CO.
 
 - **3.1. [GCN4TSP: An Efficient Graph Convolutional Network Technique for the Travelling Salesman Problem](https://cny123222.github.io/2025/07/30/Paper-Reading-1-GCN4TSP/)**
 - **3.2. [AM: Attention, learn to solve routing problems!](https://cny123222.github.io/2025/07/30/Paper-Reading-2-AM/)**
-- **3.3. (More to come...)**
+- **3.3. [RL4VRP: Reinforcement Learning with Combinatorial Actions: An Application to Vehicle Routing](https://cny123222.github.io/2025/08/18/Paper-Reading-3-RL4VRP/)**
+- **3.4. [POMO: Policy Optimization with Multiple Optima for Reinforcement Learning](https://cny123222.github.io/2025/08/19/Paper-Reading-4-POMO/)**
+- **3.5. (More to come...)**
 
 ### 4. Code Reading
 Beyond theory and high-level implementation, we will also delve into official codebases to understand the brilliant details of their implementation.
