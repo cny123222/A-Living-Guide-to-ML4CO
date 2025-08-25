@@ -61,7 +61,7 @@ Sharing some useful or interesting related topics encountered in research and pr
 
 - **5.1. [Pytorch Tensors: A Beginner's Guide](https://cny123222.github.io/2025/08/16/Pytorch-Tensors-A-Beginner-s-Guide/)**
 - **5.2. [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/08/14/Fancy-but-Useful-Tensor-Operations/)**
-- **5.3. [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/08/14/Fancy-but-Useful-Tensor-Operations/)**
+- **5.3. [Batch, Layer, or Instance Normalization?](https://cny123222.github.io/2025/08/25/Batch-Layer-or-Instance-Normalization/)**
 - **5.4. (Feel free to suggest topics you're interested in via Issues!)**
 
 ---
