@@ -53,14 +53,16 @@ We will dive deep into and analyze milestone papers in the field of ML4CO.
 ### 4. Code Reading
 Beyond theory and high-level implementation, we will also delve into official codebases to understand the brilliant details of their implementation.
 
-- **4.1. (Coming soon...)**
+- **4.1 [Code Reading #1: GNN4CO](https://cny123222.github.io/2025/08/24/Code-Reading-1-GNN4CO/)**
+- **4.2. (More to come...)**
 
 ### 5. Related Topics
 Sharing some useful or interesting related topics encountered in research and practice.
 
 - **5.1. [Pytorch Tensors: A Beginner's Guide](https://cny123222.github.io/2025/08/16/Pytorch-Tensors-A-Beginner-s-Guide/)**
 - **5.2. [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/08/14/Fancy-but-Useful-Tensor-Operations/)**
-- **5.3. (Feel free to suggest topics you're interested in via Issues!)**
+- **5.3. [Fancy but Useful Tensor Operations](https://cny123222.github.io/2025/08/14/Fancy-but-Useful-Tensor-Operations/)**
+- **5.4. (Feel free to suggest topics you're interested in via Issues!)**
 
 ---
 
